@@ -1,9 +1,12 @@
 package br.ce.selenium.seubarriga;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -73,6 +76,84 @@ public class TesteCampoTreinamento {
 		combo.selectByVisibleText(textoSelecionado);
 
 		Assert.assertEquals(textoSelecionado, combo.getFirstSelectedOption().getText());
+		
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarComboMultiplo() {
+		WebDriver driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		Select combo = new Select(driver.findElement(By.id("elementosForm:esportes")));
+		combo.selectByVisibleText("Natacao");
+		combo.selectByVisibleText("Karate");
+		combo.selectByVisibleText("O que eh esporte?");
+		
+		List<WebElement> opcoesSelecionadas = combo.getAllSelectedOptions();		
+		Assert.assertEquals(3, opcoesSelecionadas.size());
+		
+		combo.deselectByVisibleText("O que eh esporte?");
+		opcoesSelecionadas = combo.getAllSelectedOptions();		
+		Assert.assertEquals(2, opcoesSelecionadas.size());
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarClickBotao() {
+		WebDriver driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		WebElement botao = driver.findElement(By.id("buttonSimple"));
+		botao.click();
+		
+		Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
+		
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarClickLink() {
+		WebDriver driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		driver.findElement(By.linkText("Voltar")).click();
+		
+		Assert.assertEquals("Voltou!", driver.findElement(By.id("resultado")).getText());
+		
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarTituloPagina() {
+		WebDriver driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		//interessante para titulo pq deve ser a primeira tag exibida na pagina.
+		//pode nao ser interessante para outras situacoes	
+		String titulo = driver.findElement(By.tagName("h3")).getText();
+		
+		Assert.assertEquals("Campo de Treinamento", titulo);
+		
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarComponenteSemId() {
+		WebDriver driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", driver.findElement(By.className("facilAchar")).getText());
 		
 		driver.quit();
 	}
