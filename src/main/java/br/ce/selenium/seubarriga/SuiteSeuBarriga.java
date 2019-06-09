@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	TesteCampoTreinamento.class, TestAlert.class, TesteFramesEJanelas.class
+	TestePreenchimentoCamposForm.class, TesteAlertsEPrompts.class, TesteFramesEJanelas.class, TesteCadastroForm.class
 })
 public class SuiteSeuBarriga {
 

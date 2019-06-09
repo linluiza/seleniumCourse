@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import jdk.nashorn.internal.ir.annotations.Ignore;
 
-public class TestAlert {
+public class TesteAlertsEPrompts {
 	@Test
 	public void deveVerificarAlertSimples() {
 		WebDriver driver = new ChromeDriver();
