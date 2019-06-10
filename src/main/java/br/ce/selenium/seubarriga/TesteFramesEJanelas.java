@@ -1,6 +1,8 @@
 package br.ce.selenium.seubarriga;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -8,62 +10,58 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class TesteFramesEJanelas {
-	@Test
-	public void deveVerificarFrame() {
-		WebDriver driver = new ChromeDriver();
+	
+	private DSL dsl;
+	private WebDriver driver;
+	
+	@Before
+	public void setup() {
+		driver = new ChromeDriver();
 		String home_dir = System.getProperty("user.dir");
+		
 		driver.get("file:///" + home_dir
 				+ "/src/main/resources/componentes.html");
 		
+		dsl = new DSL(driver);
+	}
+	
+	@After
+	public void closeup() {
+		driver.quit();
+	}
+	
+	@Test
+	public void deveVerificarFrame() {
 		driver.switchTo().frame("frame1");
-		driver.findElement(By.id("frameButton")).click();
+		dsl.clicarEm("frameButton");
 		
-		Alert alert = driver.switchTo().alert();
-		String textoFrame = alert.getText();
-		
+		String textoFrame = dsl.alertaObterTextoEConfirmar();
 		Assert.assertEquals("Frame OK!", textoFrame);
-		alert.accept();
 		
-		driver.switchTo().defaultContent();
-		driver.findElement(By.id("elementosForm:nome")).sendKeys(textoFrame);
-		
-		driver.close();
+		dsl.focarEmJanelaPrincipal();
+		dsl.escreverEm("elementosForm:nome",textoFrame);
 	}
 	
 	@Test
 	public void deveVerificarJanelaComId() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
+		dsl.clicarEm("buttonPopUpEasy");
 		
-		driver.findElement(By.id("buttonPopUpEasy")).click();
-		
-		driver.switchTo().window("Popup");
-		driver.findElement(By.tagName("textarea")).sendKeys("deu certo?");
+		dsl.focarEmJanela("Popup");
+		dsl.escreverEm(By.tagName("textarea"),"deu certo?");
 		
 		driver.close();
-		driver.switchTo().window("");
-		driver.findElement(By.tagName("textarea")).sendKeys("e agora?");
-		
-		driver.quit();
+		dsl.focarEmJanela("");
+		dsl.escreverEm(By.tagName("textarea"),"e agora?");
 	}
 	@Test
 	public void deveVerificarJanelaSemId() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		driver.findElement(By.id("buttonPopUpHard")).click();
+		dsl.clicarEm("buttonPopUpHard");
 		Object[] listaJanelas = driver.getWindowHandles().toArray();
 		
-		driver.switchTo().window((String) listaJanelas[1]);
-		driver.findElement(By.tagName("textarea")).sendKeys("deu certo?");
+		dsl.focarEmJanela((String) listaJanelas[1]);
+		dsl.escreverEm(By.tagName("textarea"),"deu certo?");
 		
-		driver.switchTo().window((String) listaJanelas[0]);
-		driver.findElement(By.tagName("textarea")).sendKeys("e agora?");
-		
-		driver.quit();
+		dsl.focarEmJanela((String) listaJanelas[0]);
+		dsl.escreverEm(By.tagName("textarea"),"e agora?");
 	}
 }

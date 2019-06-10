@@ -2,7 +2,9 @@ package br.ce.selenium.seubarriga;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,82 +13,59 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class TestePreenchimentoCamposForm {
+	private DSL dsl;
+	private WebDriver driver;
+	
+	@Before
+	public void setup() {
+		driver = new ChromeDriver();
+		String home_dir = System.getProperty("user.dir");
+		
+		driver.get("file:///" + home_dir
+				+ "/src/main/resources/componentes.html");
+		
+		dsl = new DSL(driver);
+	}
+	
+	@After
+	public void closeup() {
+		driver.quit();
+	}
+	
 	@Test
 	public void deveVerificarTextField() {
-		 WebDriver driver = new ChromeDriver();
-		 String home_dir = System.getProperty("user.dir");
-	        driver.get("file:///" + home_dir
-	        		+ "/src/main/resources/componentes.html");
-	        
-	        driver.findElement(By.id("elementosForm:nome")).sendKeys("teste");
-	        Assert.assertEquals("teste", driver.findElement(By.id("elementosForm:nome")).getAttribute("value"));
-	        
-	        driver.quit();
+		dsl.escreverEm("elementosForm:nome", "teste");
+		Assert.assertEquals("teste", dsl.obterValor("elementosForm:nome"));
 	}
 	
 	@Test
 	public void deveVerificarTextArea() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		driver.findElement(By.id("elementosForm:sugestoes")).sendKeys("teste area\n\nmultiplas linhas");
-		Assert.assertEquals("teste area\n\nmultiplas linhas", driver.findElement(By.id("elementosForm:sugestoes")).getAttribute("value"));
-		
-		driver.quit();
+		dsl.escreverEm("elementosForm:sugestoes","teste area\n\nmultiplas linhas");
+		Assert.assertEquals("teste area\n\nmultiplas linhas", dsl.obterValor("elementosForm:sugestoes"));
 	}
 	
 	@Test
 	public void deveVerificarRadioButton() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		driver.findElement(By.id("elementosForm:sexo:0")).click();
-		Assert.assertTrue(driver.findElement(By.id("elementosForm:sexo:0")).isSelected());
-		
-		driver.quit();
+		dsl.clicarEm("elementosForm:sexo:0");
+		Assert.assertTrue(dsl.estaSelecionado("elementosForm:sexo:0"));
 	}
 
 	@Test
 	public void deveVerificarCheckBox() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		driver.findElement(By.id("elementosForm:comidaFavorita:1")).click();
-		Assert.assertTrue(driver.findElement(By.id("elementosForm:comidaFavorita:1")).isSelected());
-		
-		driver.quit();
+		dsl.clicarEm("elementosForm:comidaFavorita:1");
+		Assert.assertTrue(dsl.estaSelecionado("elementosForm:comidaFavorita:1"));
 	}
 	
 	@Test
 	public void deveVerificarCombo() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
 		String textoSelecionado = "Mestrado";
 		
-		Select combo = new Select(driver.findElement(By.id("elementosForm:escolaridade")));
-		combo.selectByVisibleText(textoSelecionado);
-
-		Assert.assertEquals(textoSelecionado, combo.getFirstSelectedOption().getText());
-		
-		driver.quit();
+		dsl.selecionarOpcaoDe("elementosForm:escolaridade",textoSelecionado);
+		Assert.assertEquals(textoSelecionado, dsl.obterOpcaoSelecionada("elementosForm:escolaridade"));
 	}
 	
 	@Test
 	public void deveVerificarComboMultiplo() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
 		Select combo = new Select(driver.findElement(By.id("elementosForm:esportes")));
 		combo.selectByVisibleText("Natacao");
 		combo.selectByVisibleText("Karate");
@@ -98,64 +77,30 @@ public class TestePreenchimentoCamposForm {
 		combo.deselectByVisibleText("O que eh esporte?");
 		opcoesSelecionadas = combo.getAllSelectedOptions();		
 		Assert.assertEquals(2, opcoesSelecionadas.size());
-		driver.quit();
 	}
 	
 	@Test
 	public void deveVerificarClickBotao() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		WebElement botao = driver.findElement(By.id("buttonSimple"));
-		botao.click();
-		
-		Assert.assertEquals("Obrigado!", botao.getAttribute("value"));
-		
-		driver.quit();
+		dsl.clicarEm("buttonSimple");
+		Assert.assertEquals("Obrigado!", dsl.obterValor("buttonSimple"));
 	}
 	
 	@Test
 	public void deveVerificarClickLink() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
 		driver.findElement(By.linkText("Voltar")).click();
-		
-		Assert.assertEquals("Voltou!", driver.findElement(By.id("resultado")).getText());
-		
-		driver.quit();
+		Assert.assertEquals("Voltou!", dsl.obterTexto("resultado"));
 	}
 	
 	@Test
 	public void deveVerificarTituloPagina() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
 		//interessante para titulo pq deve ser a primeira tag exibida na pagina.
 		//pode nao ser interessante para outras situacoes	
-		String titulo = driver.findElement(By.tagName("h3")).getText();
-		
-		Assert.assertEquals("Campo de Treinamento", titulo);
-		
-		driver.quit();
+		Assert.assertEquals("Campo de Treinamento", dsl.obterTexto(By.tagName("h3")));
 	}
 	
 	@Test
 	public void deveVerificarComponenteSemId() {
-		WebDriver driver = new ChromeDriver();
-		String home_dir = System.getProperty("user.dir");
-		driver.get("file:///" + home_dir
-				+ "/src/main/resources/componentes.html");
-		
-		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", driver.findElement(By.className("facilAchar")).getText());
-		
-		driver.quit();
+		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", dsl.obterTexto(By.className("facilAchar")));
 	}
 
 }
