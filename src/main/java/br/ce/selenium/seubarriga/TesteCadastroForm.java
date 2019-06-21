@@ -8,9 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class TesteCadastroForm {
-	private DSL dsl;
 	private WebDriver driver;
-	
+	private CampoTreinamentoPage paginaCampoTreinamento;
 	@Before
 	public void setup() {
 		driver = new ChromeDriver();
@@ -19,7 +18,7 @@ public class TesteCadastroForm {
 		driver.get("file:///" + home_dir
 				+ "/src/main/resources/componentes.html");
 		
-		dsl = new DSL(driver);
+		paginaCampoTreinamento = new CampoTreinamentoPage(driver);
 	}
 	
 	@After
@@ -28,76 +27,17 @@ public class TesteCadastroForm {
 	}
 	
 	@Test
-	public void deveAlertarQuandoNomeVazio() {
-		dsl.clicarEm("elementosForm:cadastrar");
-		
-		Assert.assertEquals("Nome eh obrigatorio", dsl.alertaObterTextoEConfirmar());
-		Assert.assertEquals("Status: Nao cadastrado", dsl.obterTexto("resultado"));
-		
-	}
-	
-	@Test
-	public void deveAlertarQuandoSobrenomeVazio() {
-		dsl.escreverEm("elementosForm:nome","Aline");
-		dsl.clicarEm("elementosForm:cadastrar");
-		
-		Assert.assertEquals("Sobrenome eh obrigatorio", dsl.alertaObterTextoEConfirmar());
-		dsl.focarEmJanelaPrincipal();
-		Assert.assertEquals("Status: Nao cadastrado", dsl.obterTexto("resultado"));
-	}
-	
-	@Test
-	public void deveAlertarQuandoSexoVazio() {
-		dsl.escreverEm("elementosForm:nome","Aline");
-		dsl.escreverEm("elementosForm:sobrenome","Luiza");
-		dsl.clicarEm("elementosForm:cadastrar");
-
-		Assert.assertEquals("Sexo eh obrigatorio", dsl.alertaObterTextoEConfirmar());
-		dsl.focarEmJanelaPrincipal();
-		Assert.assertEquals("Status: Nao cadastrado", dsl.obterTexto("resultado"));
-	}
-	
-	
-	@Test
-	public void deveAlertarTipoComidaIncompativel() {
-		dsl.escreverEm("elementosForm:nome","Aline");
-		dsl.escreverEm("elementosForm:sobrenome","Luiza");
-		dsl.clicarEm("elementosForm:sexo:1");
-		dsl.clicarEm("elementosForm:comidaFavorita:1");
-		dsl.clicarEm("elementosForm:comidaFavorita:3");
-		dsl.clicarEm("elementosForm:cadastrar");
-		
-		Assert.assertEquals("Tem certeza que voce eh vegetariano?", dsl.alertaObterTextoEConfirmar());
-		dsl.focarEmJanelaPrincipal();
-		Assert.assertEquals("Status: Nao cadastrado", dsl.obterTexto("resultado"));
-	}
-	
-	@Test
-	public void deveAlertarTipoEsporteIncompativel() {
-		dsl.escreverEm("elementosForm:nome","Aline");
-		dsl.escreverEm("elementosForm:sobrenome","Luiza");
-		dsl.clicarEm("elementosForm:sexo:1");
-		
-		dsl.selecionarOpcaoDe("elementosForm:esportes","Karate");
-		dsl.selecionarOpcaoDe("elementosForm:esportes","O que eh esporte?");
-		dsl.clicarEm("elementosForm:cadastrar");
-		
-		Assert.assertEquals("Voce faz esporte ou nao?", dsl.alertaObterTextoEConfirmar());
-		dsl.focarEmJanelaPrincipal();
-		Assert.assertEquals("Status: Nao cadastrado", dsl.obterTexto("resultado"));
-	}
-	
-	@Test
 	public void deveCadastrarComApenasCamposNomeSobrenomeESexo() {
-		dsl.escreverEm("elementosForm:nome","Aline");
-		dsl.escreverEm("elementosForm:sobrenome","Luiza");
-		dsl.clicarEm("elementosForm:sexo:1");
-		dsl.clicarEm("elementosForm:cadastrar");
+		paginaCampoTreinamento.escreverNome("Aline");
+		paginaCampoTreinamento.escreverSobrenome("Luiza");
+		paginaCampoTreinamento.selecionarSexoFeminino();
 		
-		Assert.assertTrue(dsl.obterTexto("resultado").startsWith("Cadastrado!"));
-		Assert.assertEquals("Nome: Aline", dsl.obterTexto("descNome"));
-		Assert.assertEquals("Sobrenome: Luiza", dsl.obterTexto("descSobrenome"));
-		Assert.assertEquals("Sexo: Feminino", dsl.obterTexto("descSexo"));
+		paginaCampoTreinamento.cadastrar();
+		
+		Assert.assertTrue(paginaCampoTreinamento.obterResultado().startsWith("Cadastrado!"));
+		Assert.assertEquals("Nome: Aline", paginaCampoTreinamento.obterNomeCadastro());
+		Assert.assertEquals("Sobrenome: Luiza", paginaCampoTreinamento.obterSobrenomeCadastro());
+		Assert.assertEquals("Sexo: Feminino", paginaCampoTreinamento.obterSexoCadastro());
 	}
 	
 
@@ -109,25 +49,25 @@ public class TesteCadastroForm {
 		String esporte = "Corrida";
 		String sugestao = "Yoga";
 		
-		dsl.escreverEm("elementosForm:nome",nome);
-		dsl.escreverEm("elementosForm:sobrenome",sobrenome);
-		dsl.escreverEm("elementosForm:sugestoes",sugestao);
+		paginaCampoTreinamento.escreverNome(nome);
+		paginaCampoTreinamento.escreverSobrenome(sobrenome);
+		paginaCampoTreinamento.escreverSugestao(sugestao);
 		
-		dsl.clicarEm("elementosForm:sexo:1");
-		dsl.clicarEm("elementosForm:comidaFavorita:0");
+		paginaCampoTreinamento.selecionarSexoFeminino();
+		paginaCampoTreinamento.selecionarComidaCarne();
 		
-		dsl.selecionarOpcaoDe("elementosForm:escolaridade",escolaridade);
-		dsl.selecionarOpcaoDe("elementosForm:esportes",esporte);
+		paginaCampoTreinamento.selecionarEscolaridade(escolaridade);
+		paginaCampoTreinamento.selecionarEsportes(esporte);
 		
-		dsl.clicarEm("elementosForm:cadastrar");
+		paginaCampoTreinamento.cadastrar();
 		
-		Assert.assertEquals("Nome: "+nome, dsl.obterTexto("descNome"));
-		Assert.assertEquals("Sobrenome: "+sobrenome, dsl.obterTexto("descSobrenome"));
-		Assert.assertEquals("Sexo: Feminino", dsl.obterTexto("descSexo"));
-		Assert.assertEquals("Comida: Carne", dsl.obterTexto("descComida"));
-		Assert.assertEquals("Escolaridade: superior", dsl.obterTexto("descEscolaridade"));
-		Assert.assertEquals("Esportes: "+esporte, dsl.obterTexto("descEsportes"));
-		Assert.assertEquals("Sugestoes: "+sugestao, dsl.obterTexto("descSugestoes"));
+		Assert.assertEquals("Nome: "+nome, paginaCampoTreinamento.obterNomeCadastro());
+		Assert.assertEquals("Sobrenome: "+sobrenome, paginaCampoTreinamento.obterSobrenomeCadastro());
+		Assert.assertEquals("Sexo: Feminino", paginaCampoTreinamento.obterSexoCadastro());
+		Assert.assertEquals("Comida: Carne", paginaCampoTreinamento.obterComidaCadastro());
+		Assert.assertEquals("Escolaridade: superior", paginaCampoTreinamento.obterEscolaridadeCadastro());
+		Assert.assertEquals("Esportes: "+esporte, paginaCampoTreinamento.obterEsporteCadastro());
+		Assert.assertEquals("Sugestoes: "+sugestao,paginaCampoTreinamento.obterSugestaoCadastro());
 	}
 
 }

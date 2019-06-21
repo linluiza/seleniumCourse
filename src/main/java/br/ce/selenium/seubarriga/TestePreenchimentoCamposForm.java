@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 public class TestePreenchimentoCamposForm {
 	private DSL dsl;
 	private WebDriver driver;
+	private CampoTreinamentoPage paginaCampoTreinamento;
 	
 	@Before
 	public void setup() {
@@ -25,6 +26,7 @@ public class TestePreenchimentoCamposForm {
 				+ "/src/main/resources/componentes.html");
 		
 		dsl = new DSL(driver);
+		paginaCampoTreinamento = new CampoTreinamentoPage(driver);
 	}
 	
 	@After
@@ -34,73 +36,68 @@ public class TestePreenchimentoCamposForm {
 	
 	@Test
 	public void deveVerificarTextField() {
-		dsl.escreverEm("elementosForm:nome", "teste");
-		Assert.assertEquals("teste", dsl.obterValor("elementosForm:nome"));
+		paginaCampoTreinamento.escreverNome("teste");
+		Assert.assertEquals("teste", paginaCampoTreinamento.obterValorNome());
 	}
 	
 	@Test
 	public void deveVerificarTextArea() {
-		dsl.escreverEm("elementosForm:sugestoes","teste area\n\nmultiplas linhas");
-		Assert.assertEquals("teste area\n\nmultiplas linhas", dsl.obterValor("elementosForm:sugestoes"));
+		paginaCampoTreinamento.escreverSugestao("teste area\n\nmultiplas linhas");
+		Assert.assertEquals("teste area\n\nmultiplas linhas", paginaCampoTreinamento.obterValorSugestao());
 	}
 	
 	@Test
 	public void deveVerificarRadioButton() {
-		dsl.clicarEm("elementosForm:sexo:0");
-		Assert.assertTrue(dsl.estaSelecionado("elementosForm:sexo:0"));
+		paginaCampoTreinamento.selecionarSexoMasculino();
+		Assert.assertTrue(paginaCampoTreinamento.isSexoMasculinoSelecionado());
 	}
 
 	@Test
 	public void deveVerificarCheckBox() {
-		dsl.clicarEm("elementosForm:comidaFavorita:1");
-		Assert.assertTrue(dsl.estaSelecionado("elementosForm:comidaFavorita:1"));
+		paginaCampoTreinamento.selecionarComidaFrango();
+		Assert.assertTrue(paginaCampoTreinamento.isComidaFrangoSelecionada());
 	}
 	
 	@Test
 	public void deveVerificarCombo() {
 		String textoSelecionado = "Mestrado";
 		
-		dsl.selecionarOpcaoDe("elementosForm:escolaridade",textoSelecionado);
-		Assert.assertEquals(textoSelecionado, dsl.obterOpcaoSelecionada("elementosForm:escolaridade"));
+		paginaCampoTreinamento.selecionarEscolaridade(textoSelecionado);
+		Assert.assertEquals(textoSelecionado, paginaCampoTreinamento.obterEscolaridadeSelecionada());
 	}
 	
 	@Test
 	public void deveVerificarComboMultiplo() {
-		Select combo = new Select(driver.findElement(By.id("elementosForm:esportes")));
-		combo.selectByVisibleText("Natacao");
-		combo.selectByVisibleText("Karate");
-		combo.selectByVisibleText("O que eh esporte?");
+		paginaCampoTreinamento.selecionarEsportes("Natacao","Karate","O que eh esporte?");
 		
-		List<WebElement> opcoesSelecionadas = combo.getAllSelectedOptions();		
-		Assert.assertEquals(3, opcoesSelecionadas.size());
+		Assert.assertEquals(3, paginaCampoTreinamento.obterEsportesSelecionados().size());
 		
-		combo.deselectByVisibleText("O que eh esporte?");
-		opcoesSelecionadas = combo.getAllSelectedOptions();		
-		Assert.assertEquals(2, opcoesSelecionadas.size());
+		paginaCampoTreinamento.deselecionarEsportes("O que eh esporte?");
+		Assert.assertEquals(2, paginaCampoTreinamento.obterEsportesSelecionados().size());
 	}
 	
 	@Test
 	public void deveVerificarClickBotao() {
-		dsl.clicarEm("buttonSimple");
-		Assert.assertEquals("Obrigado!", dsl.obterValor("buttonSimple"));
+		paginaCampoTreinamento.clicarBotaoSimples();
+		Assert.assertEquals("Obrigado!", paginaCampoTreinamento.obterValorBotaoSimples());
 	}
 	
 	@Test
 	public void deveVerificarClickLink() {
-		driver.findElement(By.linkText("Voltar")).click();
-		Assert.assertEquals("Voltou!", dsl.obterTexto("resultado"));
+		paginaCampoTreinamento.clicarLinkVoltar();
+		Assert.assertEquals("Voltou!",paginaCampoTreinamento.obterResultado());
 	}
 	
 	@Test
 	public void deveVerificarTituloPagina() {
 		//interessante para titulo pq deve ser a primeira tag exibida na pagina.
 		//pode nao ser interessante para outras situacoes	
-		Assert.assertEquals("Campo de Treinamento", dsl.obterTexto(By.tagName("h3")));
+		Assert.assertEquals("Campo de Treinamento", paginaCampoTreinamento.obterTitulo());
 	}
 	
 	@Test
 	public void deveVerificarComponenteSemId() {
-		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", dsl.obterTexto(By.className("facilAchar")));
+		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", paginaCampoTreinamento.obterTextoFacilAchar());
 	}
 
 }

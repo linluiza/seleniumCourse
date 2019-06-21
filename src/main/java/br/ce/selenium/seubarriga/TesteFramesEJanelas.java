@@ -4,15 +4,18 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class TesteFramesEJanelas {
 	
 	private DSL dsl;
 	private WebDriver driver;
+	private CampoTreinamentoPage paginaCampoTreinamento;
 	
 	@Before
 	public void setup() {
@@ -23,6 +26,7 @@ public class TesteFramesEJanelas {
 				+ "/src/main/resources/componentes.html");
 		
 		dsl = new DSL(driver);
+		paginaCampoTreinamento = new CampoTreinamentoPage(driver);
 	}
 	
 	@After
@@ -39,7 +43,16 @@ public class TesteFramesEJanelas {
 		Assert.assertEquals("Frame OK!", textoFrame);
 		
 		dsl.focarEmJanelaPrincipal();
-		dsl.escreverEm("elementosForm:nome",textoFrame);
+		paginaCampoTreinamento.escreverNome(textoFrame);
+	}
+	
+	@Test
+	public void deveVerificarFrameEscondido() {
+		driver.switchTo().frame("frame2");
+		dsl.clicarEm("frameButton");
+		
+		String textoFrame = dsl.alertaObterTextoEConfirmar();
+		Assert.assertEquals("Frame OK!", textoFrame);
 	}
 	
 	@Test

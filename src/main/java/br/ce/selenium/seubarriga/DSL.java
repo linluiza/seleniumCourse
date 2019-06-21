@@ -1,9 +1,14 @@
 package br.ce.selenium.seubarriga;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 public class DSL {
@@ -89,4 +94,43 @@ public class DSL {
 	public void focarEmJanela(String id) {
 		driver.switchTo().window(id);
 	}
+	
+	public void selecionarOpcoesComboMultipla(String id, String... opcoes) {
+		Select combo = new Select(driver.findElement(By.id(id)));
+		
+		for(String opcao: opcoes) {
+			combo.selectByVisibleText(opcao);
+		}
+	}
+	
+	public List<String> obterOpcoesSelecionadasComboMultipla(String id) {
+		Select combo = new Select(driver.findElement(By.id(id)));
+		List<WebElement> elementosSelecionados = combo.getAllSelectedOptions();
+		List<String> opcoesSelecionadas = new ArrayList<String>();
+		
+		for(WebElement opcao: elementosSelecionados) {
+			opcoesSelecionadas.add(opcao.getAttribute("value"));
+		}
+		
+		return opcoesSelecionadas;
+	}
+	
+	public void deselecionarOpcoesComboMultipla(String id, String... opcoes) {
+		Select combo = new Select(driver.findElement(By.id(id)));
+		
+		for(String opcao: opcoes) {
+			combo.deselectByVisibleText(opcao);
+		}
+	}
+	
+	public void clicarLink(String text) {
+		driver.findElement(By.linkText(text)).click();
+	}
+	
+	public Object executarJavaScript(String comando, Object... argumentos) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		
+		return js.executeScript(comando, argumentos);
+	}
+	
 }
