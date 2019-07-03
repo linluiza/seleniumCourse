@@ -108,27 +108,34 @@ public class CampoTreinamentoPage {
 	}
 	
 	public String obterNomeCadastro() {
-		return dsl.obterTexto("descNome");
+		String xpath = "//div[@id='descNome']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 	public String obterSobrenomeCadastro() {
-		return dsl.obterTexto("descSobrenome");
+		String xpath = "//div[@id='descSobrenome']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 	public String obterSexoCadastro() {
-		return dsl.obterTexto("descSexo");
+		String xpath = "//div[@id='descSexo']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 
 	public String obterComidaCadastro() {
-		return dsl.obterTexto("descComida");
+		String xpath = "//div[@id='descComida']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 
 	public String obterEscolaridadeCadastro() {
-		return dsl.obterTexto("descEscolaridade");
+		String xpath = "//div[@id='descEscolaridade']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 	public String obterEsporteCadastro() {
-		return dsl.obterTexto("descEsportes");
+		String xpath = "//div[@id='descEsportes']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 
 	public String obterSugestaoCadastro() {
-		return dsl.obterTexto("descSugestoes");
+		String xpath = "//div[@id='descSugestoes']/span"; 
+		return dsl.obterTexto(By.xpath(xpath));
 	}
 }

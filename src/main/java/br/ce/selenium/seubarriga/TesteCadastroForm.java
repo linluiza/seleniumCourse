@@ -35,9 +35,9 @@ public class TesteCadastroForm {
 		paginaCampoTreinamento.cadastrar();
 		
 		Assert.assertTrue(paginaCampoTreinamento.obterResultado().startsWith("Cadastrado!"));
-		Assert.assertEquals("Nome: Aline", paginaCampoTreinamento.obterNomeCadastro());
-		Assert.assertEquals("Sobrenome: Luiza", paginaCampoTreinamento.obterSobrenomeCadastro());
-		Assert.assertEquals("Sexo: Feminino", paginaCampoTreinamento.obterSexoCadastro());
+		Assert.assertEquals("Aline", paginaCampoTreinamento.obterNomeCadastro());
+		Assert.assertEquals("Luiza", paginaCampoTreinamento.obterSobrenomeCadastro());
+		Assert.assertEquals("Feminino", paginaCampoTreinamento.obterSexoCadastro());
 	}
 	
 
@@ -61,13 +61,13 @@ public class TesteCadastroForm {
 		
 		paginaCampoTreinamento.cadastrar();
 		
-		Assert.assertEquals("Nome: "+nome, paginaCampoTreinamento.obterNomeCadastro());
-		Assert.assertEquals("Sobrenome: "+sobrenome, paginaCampoTreinamento.obterSobrenomeCadastro());
-		Assert.assertEquals("Sexo: Feminino", paginaCampoTreinamento.obterSexoCadastro());
-		Assert.assertEquals("Comida: Carne", paginaCampoTreinamento.obterComidaCadastro());
-		Assert.assertEquals("Escolaridade: superior", paginaCampoTreinamento.obterEscolaridadeCadastro());
-		Assert.assertEquals("Esportes: "+esporte, paginaCampoTreinamento.obterEsporteCadastro());
-		Assert.assertEquals("Sugestoes: "+sugestao,paginaCampoTreinamento.obterSugestaoCadastro());
+		Assert.assertEquals(nome, paginaCampoTreinamento.obterNomeCadastro());
+		Assert.assertEquals(sobrenome, paginaCampoTreinamento.obterSobrenomeCadastro());
+		Assert.assertEquals("Feminino", paginaCampoTreinamento.obterSexoCadastro());
+		Assert.assertEquals("Carne", paginaCampoTreinamento.obterComidaCadastro());
+		Assert.assertEquals("superior", paginaCampoTreinamento.obterEscolaridadeCadastro());
+		Assert.assertEquals(esporte, paginaCampoTreinamento.obterEsporteCadastro());
+		Assert.assertEquals(sugestao,paginaCampoTreinamento.obterSugestaoCadastro());
 	}
 
 }
