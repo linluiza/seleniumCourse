@@ -30,8 +30,12 @@ public class DSL {
 		return driver.findElement(By.id(id)).getAttribute("value");
 	}
 	
+	public void clicarEm(By by) {
+		driver.findElement(by).click();
+	}
+	
 	public void clicarEm(String id) {
-		driver.findElement(By.id(id)).click();
+		clicarEm(By.id(id));
 	}
 	
 	public boolean estaSelecionado(String id) {
@@ -39,7 +43,11 @@ public class DSL {
 	}
 	
 	public void selecionarOpcaoDe(String id, String opcao) {
-		Select combo = new Select(driver.findElement(By.id(id)));
+		selecionarOpcaoDe(By.id(id), opcao);
+	}
+	
+	public void selecionarOpcaoDe(By by, String opcao) {
+		Select combo = new Select(driver.findElement(by));
 		combo.selectByVisibleText(opcao);
 	}
 	
