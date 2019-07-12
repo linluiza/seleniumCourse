@@ -138,4 +138,13 @@ public class CampoTreinamentoPage {
 		String xpath = "//div[@id='descSugestoes']/span"; 
 		return dsl.obterTexto(By.xpath(xpath));
 	}
+
+	public void clicarEmBotaoDeLinhaEspecificaTabela(String coluna, String valor, String idTabela) {
+		int indexColuna = dsl.obterIndexColunaTabela(idTabela, coluna);
+		int indexLinha = dsl.obterIndexLinhaTabela(idTabela, indexColuna, valor);
+		
+		String xpathButton = "//table[@id='elementosForm:tableUsuarios']//tbody//tr["+indexLinha+"]//input[@type='button']";
+		dsl.clicarEm(By.xpath(xpathButton));
+	}
+	
 }

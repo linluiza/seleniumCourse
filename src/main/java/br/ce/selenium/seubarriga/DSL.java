@@ -30,12 +30,13 @@ public class DSL {
 		return driver.findElement(By.id(id)).getAttribute("value");
 	}
 	
-	public void clicarEm(By by) {
-		driver.findElement(by).click();
-	}
-	
 	public void clicarEm(String id) {
 		clicarEm(By.id(id));
+
+	}
+	
+	public void clicarEm(By by) {
+		driver.findElement(by).click();
 	}
 	
 	public boolean estaSelecionado(String id) {
@@ -139,6 +140,38 @@ public class DSL {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		
 		return js.executeScript(comando, argumentos);
+	}
+	
+	public int obterIndexColunaTabela(String idTabela, String tituloColuna) {
+		int index = -1;
+		List<WebElement> colunasTabela = driver.findElements(By.xpath("//table[@id='"+idTabela+"']/thead//th"));
+		
+		int indexColuna = 1;
+		for(WebElement coluna : colunasTabela) {
+			if(tituloColuna.equals(coluna.getText())) {
+				index = indexColuna;
+				break;
+			}
+			indexColuna++;
+		}
+		
+		return index;
+	}
+	
+	public int obterIndexLinhaTabela(String idTabela, int indexColuna, String valorCelula) {
+		int index = -1;
+		List<WebElement> colunasTabela = driver.findElements(By.xpath("//table[@id='"+idTabela+"']/tbody//tr"));
+		int numeroLinhas = colunasTabela.size();
+		
+		for(int i=1;i<=numeroLinhas;i++) {
+			WebElement celula = driver.findElement(By.xpath("//table[@id='"+idTabela+"']/tbody//tr["+i+"]//td["+indexColuna+"]"));
+			if(valorCelula.equals(celula.getText())) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
 	}
 	
 }

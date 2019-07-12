@@ -94,5 +94,15 @@ public class TestePreenchimentoCamposForm {
 	public void deveVerificarComponenteSemId() {
 		Assert.assertEquals("Cuidado onde clica, muitas armadilhas...", paginaCampoTreinamento.obterTextoFacilAchar());
 	}
+	
+	@Test
+	public void deveVerificarCliqueBotaoTabela() {
+		String coluna = "Nome";
+		String valor = "Usuario A";
+		
+		paginaCampoTreinamento.clicarEmBotaoDeLinhaEspecificaTabela(coluna, valor, "elementosForm:tableUsuarios");
+		
+		Assert.assertEquals(valor, dsl.alertaObterTextoEConfirmar());
+	}
 
 }

@@ -23,7 +23,7 @@ public class TestePrimefaces {
 	
 	@After
 	public void closeup() {
-//		driver.quit();
+		driver.quit();
 	}
 	
 	@Test
